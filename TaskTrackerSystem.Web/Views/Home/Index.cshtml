@@ -1,0 +1,36 @@
+﻿@{
+    ViewData["Layout"] = "landing";
+}
+
+<div class="landing-split">
+    <div class="landing-visual">
+        <div class="landing-visual-content">
+            <h1 class="landing-title">TASK TRACKER</h1>
+            <p class="landing-slogan">Zamanını yönet, hedeflerine zamanında ulaş.</p>
+        </div>
+    </div>
+
+    <div class="landing-panel">
+        <div class="landing-panel-topbar">
+            <span class="landing-panel-brand">TaskTracker</span>
+
+            <button id="themeToggleBtn" type="button" class="btn btn-icon" title="Açık/Koyu Mod">
+                <i class="bi bi-moon-stars-fill" id="themeToggleIcon"></i>
+            </button>
+        </div>
+
+        <div class="landing-panel-body">
+            <h2>Görevlerini planla,<br />zamanını takip et.</h2>
+        </div>
+
+        <div class="landing-panel-actions">
+            <a asp-controller="Account" asp-action="Login" class="btn btn-outline-primary btn-lg flex-fill">
+                Giriş Yap
+            </a>
+
+            <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg flex-fill">
+                Hadi Başla
+            </a>
+        </div>
+    </div>
+</div>

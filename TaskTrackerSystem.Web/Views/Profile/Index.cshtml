@@ -1,0 +1,86 @@
+﻿@using System.Text.Json
+@model TaskTrackerSystem.Web.ViewModels.ProfileViewModel
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card p-4 shadow-sm">
+
+            @{
+                var avatar = TaskTrackerSystem.Web.Common.AvatarCatalog.GetOrDefault(Model.AvatarId);
+            }
+
+            <div class="d-flex align-items-center gap-3 mb-4">
+                <div class="rounded-circle d-flex align-items-center justify-content-center"
+                     style="width:72px;height:72px;background-color:@avatar.Color;">
+                    <i class="bi @avatar.Icon text-white fs-2"></i>
+                </div>
+
+                <a asp-action="Avatar" class="btn btn-sm btn-outline-dark">
+                    Avatarı Değiştir
+                </a>
+            </div>
+
+            <h2 class="mb-4">My Profile</h2>
+
+            <dl class="row mb-0">
+                <dt class="col-sm-4">Name - Surname</dt>
+                <dd class="col-sm-8">@Model.Name</dd>
+
+                <dt class="col-sm-4">Email</dt>
+                <dd class="col-sm-8">@Model.Email</dd>
+
+                <dt class="col-sm-4">Username</dt>
+                <dd class="col-sm-8">@Model.UserName</dd>
+
+                <dt class="col-sm-4">Registration Date</dt>
+                <dd class="col-sm-8">@Model.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</dd>
+            </dl>
+
+            <a asp-action="Edit" class="btn btn-primary mt-3">
+                Update Profile
+            </a>
+        </div>
+    </div>
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-8">
+            <div class="card p-4 shadow-sm">
+                <h5 class="mb-3">
+                    Son 14 Günde Harcanan Süre
+                    <span class="text-muted small">(görev "Devam Ediyor" durumundayken geçen süre)</span>
+                </h5>
+
+                <div style="height:350px;">
+                    <canvas id="timeChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <script>
+            const labels = @Html.Raw(JsonSerializer.Serialize(Model.TimeChart.Select(x => x.DateLabel)));
+            const minutes = @Html.Raw(JsonSerializer.Serialize(Model.TimeChart.Select(x => x.Minutes)));
+
+            new Chart(document.getElementById('timeChart'), {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Dakika',
+                        data: minutes,
+                        backgroundColor: '#0d6efd'
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { stepSize: 1, precision: 0 }
+                        }
+                    }
+                }
+            });
+    </script>
+
+</div>

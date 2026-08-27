@@ -1,0 +1,233 @@
+@model TaskTrackerSystem.Web.ViewModels.TasksIndexViewModel
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Görevlerim</h1>
+
+    <div class="d-flex gap-2">
+        <a class="btn btn-outline-secondary" asp-action="Archived">
+            <i class="bi bi-archive"></i> Arşiv
+        </a>
+
+        <a class="btn btn-primary" asp-action="Create">
+            <i class="bi bi-plus-lg"></i> Yeni Görev
+        </a>
+    </div>
+</div>
+
+<form method="get" class="card p-3 mb-3">
+    <div class="row g-2 align-items-end">
+        <div class="col-auto">
+            <label class="form-label mb-1">Öncelik</label>
+            <select name="priority" class="form-select form-select-sm" onchange="this.form.submit()">
+                <option value="">Tümü</option>
+                <option value="high" selected="@(Model.PriorityFilter == "high")">Yüksek</option>
+                <option value="medium" selected="@(Model.PriorityFilter == "medium")">Orta</option>
+                <option value="low" selected="@(Model.PriorityFilter == "low")">Düşük</option>
+            </select>
+        </div>
+
+        <div class="col-auto">
+            <label class="form-label mb-1">Sırala</label>
+            <select name="sort" class="form-select form-select-sm" onchange="this.form.submit()">
+                <option value="" selected="@(Model.SortOption == null)">Tarihe göre (yakın önce)</option>
+                <option value="duedate_desc" selected="@(Model.SortOption == "duedate_desc")">Tarihe göre (uzak önce)</option>
+                <option value="priority_desc" selected="@(Model.SortOption == "priority_desc")">Önceliğe göre</option>
+            </select>
+        </div>
+
+        @if (Model.PriorityFilter != null || Model.SortOption != null)
+        {
+            <div class="col-auto">
+                <a asp-action="Index" class="btn btn-sm btn-outline-secondary">Filtreyi Temizle</a>
+            </div>
+        }
+    </div>
+</form>
+
+<div class="row row-cards">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="card-title mb-0">
+                    Bekliyor
+                    <span class="badge badge-count ms-1">@Model.Pending.Count</span>
+                </h3>
+
+                <button type="button" class="btn btn-sm btn-icon chevron-toggle" data-bs-toggle="collapse"
+                        data-bs-target="#pendingBody" aria-expanded="true" aria-controls="pendingBody">
+                    <i class="bi bi-chevron-up"></i>
+                </button>
+            </div>
+
+            <div class="collapse show" id="pendingBody">
+                <div class="list-group list-group-flush">
+                    @if (!Model.Pending.Any())
+                    {
+                        <div class="list-group-item text-muted small">Bu sütunda görev yok.</div>
+                    }
+                    else
+                    {
+                        @foreach (var t in Model.Pending)
+                        {
+                            <div class="list-group-item">
+                                <a class="d-block fw-semibold text-decoration-none task-title"
+                                   asp-action="Details" asp-route-id="@t.Id">
+                                    @t.Title
+                                </a>
+
+                                <div class="small text-muted mb-2">
+                                    @t.DueDate.ToString("dd.MM.yyyy HH:mm")
+                                </div>
+
+                                <span class="badge @(t.Priority == TaskPriority.High ? "badge-high" : t.Priority == TaskPriority.Medium ? "badge-medium" : "badge-low")">
+                                    @t.Priority
+                                </span>
+
+                                <div class="d-flex gap-1 mt-2">
+                                    <form asp-action="Start" asp-route-id="@t.Id" method="post">
+                                        <input type="hidden" name="returnUrl" value="@Url.Action("Index")" />
+                                        <button class="btn btn-sm btn-outline-primary">Başlat</button>
+                                    </form>
+
+                                    <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@t.Id">
+                                        Düzenle
+                                    </a>
+
+                                    <form asp-action="Delete" asp-route-id="@t.Id" method="post">
+                                        <button class="btn btn-sm btn-outline-danger"
+                                                onclick="return confirm('Bu görev silinsin mi?')">
+                                            Sil
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="card-title mb-0">
+                    Devam Ediyor
+                    <span class="badge badge-count ms-1">@Model.InProgress.Count</span>
+                </h3>
+
+                <button type="button" class="btn btn-sm btn-icon chevron-toggle" data-bs-toggle="collapse"
+                        data-bs-target="#inProgressBody" aria-expanded="true" aria-controls="inProgressBody">
+                    <i class="bi bi-chevron-up"></i>
+                </button>
+            </div>
+
+            <div class="collapse show" id="inProgressBody">
+                <div class="list-group list-group-flush">
+                    @if (!Model.InProgress.Any())
+                    {
+                        <div class="list-group-item text-muted small">Bu sütunda görev yok.</div>
+                    }
+                    else
+                    {
+                        @foreach (var t in Model.InProgress)
+                        {
+                            <div class="list-group-item">
+                                <a class="d-block fw-semibold text-decoration-none task-title"
+                                   asp-action="Details" asp-route-id="@t.Id">
+                                    @t.Title
+                                </a>
+
+                                <div class="small text-muted mb-2">
+                                    @t.DueDate.ToString("dd.MM.yyyy HH:mm")
+                                </div>
+
+                                <span class="badge @(t.Priority == TaskPriority.High ? "badge-high" : t.Priority == TaskPriority.Medium ? "badge-medium" : "badge-low")">
+                                    @t.Priority
+                                </span>
+
+                                <div class="d-flex gap-1 mt-2">
+                                    <form asp-action="Complete" asp-route-id="@t.Id" method="post">
+                                        <input type="hidden" name="returnUrl" value="@Url.Action("Index")" />
+                                        <button class="btn btn-sm btn-success">Tamamla</button>
+                                    </form>
+
+                                    <a class="btn btn-sm btn-outline-secondary" asp-action="Edit" asp-route-id="@t.Id">
+                                        Düzenle
+                                    </a>
+
+                                    <form asp-action="Delete" asp-route-id="@t.Id" method="post">
+                                        <button class="btn btn-sm btn-outline-danger"
+                                                onclick="return confirm('Bu görev silinsin mi?')">
+                                            Sil
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="card-title mb-0">
+                    Tamamlandı
+                    <span class="badge badge-count ms-1">@Model.Completed.Count</span>
+                </h3>
+
+                <button type="button" class="btn btn-sm btn-icon chevron-toggle" data-bs-toggle="collapse"
+                        data-bs-target="#completedBody" aria-expanded="true" aria-controls="completedBody">
+                    <i class="bi bi-chevron-up"></i>
+                </button>
+            </div>
+
+            <div class="collapse show" id="completedBody">
+                <div class="list-group list-group-flush">
+                    @if (!Model.Completed.Any())
+                    {
+                        <div class="list-group-item text-muted small">Bu sütunda görev yok.</div>
+                    }
+                    else
+                    {
+                        @foreach (var t in Model.Completed)
+                        {
+                            <div class="list-group-item">
+                                <a class="d-block fw-semibold text-decoration-none task-title"
+                                   asp-action="Details" asp-route-id="@t.Id">
+                                    @t.Title
+                                </a>
+
+                                <div class="small text-muted mb-2">
+                                    @t.DueDate.ToString("dd.MM.yyyy HH:mm")
+                                </div>
+
+                                <span class="badge @(t.Priority == TaskPriority.High ? "badge-high" : t.Priority == TaskPriority.Medium ? "badge-medium" : "badge-low")">
+                                    @t.Priority
+                                </span>
+
+                                <div class="d-flex gap-1 mt-2">
+                                    <form asp-action="Archive" asp-route-id="@t.Id" method="post">
+                                        <button class="btn btn-sm btn-outline-secondary">
+                                            <i class="bi bi-archive"></i> Arşivle
+                                        </button>
+                                    </form>
+
+                                    <form asp-action="Delete" asp-route-id="@t.Id" method="post">
+                                        <button class="btn btn-sm btn-outline-danger"
+                                                onclick="return confirm('Bu görev silinsin mi?')">
+                                            Sil
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

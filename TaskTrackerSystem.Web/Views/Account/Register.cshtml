@@ -1,0 +1,48 @@
+@model RegisterViewModel
+
+<div class="card card-md">
+    <div class="card-body">
+        <h2 class="h2 text-center mb-4">Kayıt Ol</h2>
+
+        <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+        <form method="post" autocomplete="off">
+            <div class="mb-3">
+                <label asp-for="Name" class="form-label"></label>
+                <input asp-for="Name" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="UserName" class="form-label"></label>
+                <input asp-for="UserName" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label"></label>
+                <input asp-for="Password" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="ConfirmPassword" class="form-label"></label>
+                <input asp-for="ConfirmPassword" class="form-control" />
+            </div>
+
+            <div class="form-footer">
+                <button class="btn btn-primary w-100">
+                    Kayıt Ol
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="card-body text-center pt-0">
+        <p class="mb-0">
+            Zaten hesabın var mı? <a asp-action="Login" class="fw-medium">Giriş yap</a>
+        </p>
+    </div>
+</div>

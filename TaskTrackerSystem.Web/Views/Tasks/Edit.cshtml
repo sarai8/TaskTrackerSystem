@@ -1,0 +1,30 @@
+@model TaskFormViewModel
+
+<h1>Görevi Düzenle</h1>
+
+<div class="card p-4 mt-3">
+    <form method="post">
+        <input asp-for="Id" type="hidden" />
+
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        <partial name="_TaskForm" model="Model" />
+
+        <div class="mb-3">
+            <label asp-for="Status" class="form-label"></label>
+
+            <select asp-for="Status"
+                    asp-items="Html.GetEnumSelectList<TaskTrackerSystem.Domain.Enums.TaskStatus>()"
+                    class="form-select">
+            </select>
+        </div>
+
+        <button class="btn btn-primary">
+            Güncelle
+        </button>
+
+        <a asp-action="Index" class="btn btn-link">
+            İptal
+        </a>
+    </form>
+</div>

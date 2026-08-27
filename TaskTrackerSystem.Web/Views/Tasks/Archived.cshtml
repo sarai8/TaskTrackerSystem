@@ -1,0 +1,52 @@
+﻿@model List<TaskTrackerSystem.Application.DTOs.TaskDto>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Arşiv</h1>
+
+    <a class="btn btn-outline-secondary" asp-action="Index">
+        <i class="bi bi-arrow-left"></i> Görevlere Dön
+    </a>
+</div>
+
+<div class="card">
+    <div class="list-group list-group-flush">
+        @if (!Model.Any())
+        {
+            <div class="list-group-item text-muted small">
+                Arşivlenmiş görev yok.
+            </div>
+        }
+        else
+        {
+            @foreach (var t in Model)
+            {
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="fw-semibold">@t.Title</div>
+                        <div class="small text-muted">
+                            Son tarih: @t.DueDate.ToString("dd.MM.yyyy HH:mm")
+                        </div>
+                        <span class="badge @(t.Priority == TaskTrackerSystem.Domain.Enums.TaskPriority.High ? "badge-high" : t.Priority == TaskTrackerSystem.Domain.Enums.TaskPriority.Medium ? "badge-medium" : "badge-low")">
+                            @t.Priority
+                        </span>
+                    </div>
+
+                    <div class="d-flex gap-1">
+                        <form asp-action="Unarchive" asp-route-id="@t.Id" method="post">
+                            <button class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-box-arrow-up"></i> Arşivden Çıkar
+                            </button>
+                        </form>
+
+                        <form asp-action="Delete" asp-route-id="@t.Id" method="post">
+                            <button class="btn btn-sm btn-outline-danger"
+                                    onclick="return confirm('Bu görev kalıcı olarak silinsin mi?')">
+                                Sil
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>

@@ -1,0 +1,37 @@
+﻿@model TaskTrackerSystem.Web.ViewModels.AdminUserListItemViewModel
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card p-4 shadow-sm">
+            <h2 class="mb-4">Kullanıcı Detayı</h2>
+
+            <dl class="row mb-0">
+                <dt class="col-sm-4">Ad Soyad</dt>
+                <dd class="col-sm-8">@Model.Name</dd>
+
+                <dt class="col-sm-4">E-posta</dt>
+                <dd class="col-sm-8">@Model.Email</dd>
+
+                <dt class="col-sm-4">Kullanıcı Adı</dt>
+                <dd class="col-sm-8">@Model.UserName</dd>
+
+                <dt class="col-sm-4">Kayıt Tarihi</dt>
+                <dd class="col-sm-8">@Model.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</dd>
+
+                <dt class="col-sm-4">Durum</dt>
+                <dd class="col-sm-8">
+                    @if (Model.IsActive)
+                    {
+                        <span class="badge bg-success">Aktif</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">Pasif</span>
+                    }
+                </dd>
+            </dl>
+
+            <a asp-action="Index" class="btn btn-outline-secondary mt-3">Listeye Dön</a>
+        </div>
+    </div>
+</div>

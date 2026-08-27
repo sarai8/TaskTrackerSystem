@@ -1,0 +1,19 @@
+@model TaskFormViewModel
+
+<h1>Yeni Görev</h1>
+
+<div class="card p-4 mt-3">
+    <form method="post">
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        <partial name="_TaskForm" model="Model" />
+
+        <button class="btn btn-primary">
+            Kaydet
+        </button>
+
+        <a asp-action="Index" class="btn btn-link">
+            İptal
+        </a>
+    </form>
+</div>

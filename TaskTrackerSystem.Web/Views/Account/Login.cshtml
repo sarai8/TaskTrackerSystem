@@ -1,0 +1,47 @@
+@model LoginViewModel
+
+<div class="card card-md">
+    <div class="card-body">
+        <h2 class="h2 text-center mb-4">Giriş Yap</h2>
+
+        <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+        <form method="post" autocomplete="off">
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="mb-2">
+                <label asp-for="Password" class="form-label"></label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-check">
+                    <input asp-for="RememberMe" class="form-check-input" />
+                    <span class="form-check-label">Beni hatırla</span>
+                </label>
+            </div>
+
+            <div class="form-footer">
+                <button class="btn btn-primary w-100">
+                    Giriş Yap
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="hr-text">veya</div>
+
+    <div class="card-body text-center">
+        <p class="mb-1">
+            <a asp-action="ForgotPassword">Şifremi unuttum</a>
+        </p>
+        <p class="mb-0">
+            Hesabın yok mu? <a asp-action="Register" class="fw-medium">Kayıt ol</a>
+        </p>
+    </div>
+</div>

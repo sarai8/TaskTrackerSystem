@@ -1,0 +1,118 @@
+﻿@model List<TaskTrackerSystem.Web.ViewModels.AdminUserListItemViewModel>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2>Admin Paneli</h2>
+        <p class="text-muted mb-0">
+            Sistemde kayıtlı tüm kullanıcılar
+        </p>
+    </div>
+
+    <span class="badge bg-dark fs-6">
+        Toplam: @Model.Count kullanıcı
+    </span>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+
+                <thead class="table-dark">
+                    <tr>
+                        <th>#</th>
+                        <th>Ad Soyad</th>
+                        <th>E-posta</th>
+                        <th>Kullanıcı Adı</th>
+                        <th>Kayıt Tarihi</th>
+                        <th>Durum</th>
+                        <th>İşlemler</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @if (Model.Any())
+                    {
+                        var counter = 1;
+
+                        foreach (var user in Model)
+                        {
+                            <tr>
+                                <td>@counter</td>
+
+                                <td>
+                                    <strong>@user.Name</strong>
+                                </td>
+
+                                <td>
+                                    @user.Email
+                                </td>
+
+                                <td>
+                                    @user.UserName
+                                </td>
+
+                                <td>
+                                    @user.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")
+                                </td>
+
+                                <td>
+                                    @if (user.IsActive)
+                                    {
+                                        <span class="badge bg-success">Aktif</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">Pasif</span>
+                                    }
+                                </td>
+
+                                <td>
+                                    <div class="d-flex gap-2">
+                                        <a asp-action="Details" asp-route-id="@user.Id"
+                                           class="btn btn-sm btn-outline-secondary" title="Görüntüle">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+
+                                        <a asp-action="Edit" asp-route-id="@user.Id"
+                                           class="btn btn-sm btn-outline-primary" title="Düzenle">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+
+                                        <form asp-action="ToggleStatus" asp-route-id="@user.Id" method="post" class="d-inline">
+                                            <button type="submit"
+                                                    class="btn btn-sm @(user.IsActive ? "btn-outline-warning" : "btn-outline-success")"
+                                                    title="@(user.IsActive ? "Pasif Yap" : "Aktif Yap")">
+                                                <i class="bi bi-power"></i>
+                                            </button>
+                                        </form>
+
+                                        <form asp-action="Delete" asp-route-id="@user.Id" method="post" class="d-inline"
+                                              onsubmit="return confirm('Bu kullanıcıyı silmek istediğinize emin misiniz?');">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Sil">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            counter++;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="7" class="text-center py-4">
+                                Sistemde kayıtlı kullanıcı bulunamadı.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,181 @@
+@model TaskTrackerSystem.Web.Controllers.DashboardVm
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1>Dashboard</h1>
+        <p class="text-muted mb-0">
+            Görevlerini tek yerden yönet.
+        </p>
+    </div>
+
+    <a class="btn btn-primary"
+       asp-controller="Tasks"
+       asp-action="Create">
+        + Yeni Görev
+    </a>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card p-3">
+            <div class="text-muted">Toplam</div>
+            <div class="stat">@Model.Total</div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card p-3">
+            <div class="text-muted">Bekleyen</div>
+            <div class="stat">@Model.Pending</div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card p-3">
+            <div class="text-muted">Tamamlanan</div>
+            <div class="stat">@Model.Completed</div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card p-3">
+            <div class="text-muted">Geciken</div>
+            <div class="stat">@Model.Overdue</div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row g-3">
+    <div class="col-md-8">
+        <div class="card p-4 h-100">
+            <h1 class="mb-3">Şu An Üzerinde Çalışılan Görev</h1>
+
+            @if (Model.ActiveTask == null)
+            {
+                <p class="text-muted mb-0">
+                    Şu anda "Devam Ediyor" durumunda bir göreviniz yok.
+                </p>
+
+                <a asp-controller="Tasks" asp-action="Index" class="btn btn-sm btn-outline-dark mt-2 align-self-start">
+                    Görevlerime Git
+                </a>
+            }
+            else
+            {
+                var remainingText = TaskTrackerSystem.Web.Common.DateDiffFormatter.FormatRemaining(DateTime.Now, Model.ActiveTask.DueDate);
+                var isOverdue = Model.ActiveTask.DueDate <= DateTime.Now;
+                var elapsedText = TaskTrackerSystem.Web.Common.DateDiffFormatter.FormatDuration(Model.ActiveTask.ElapsedMinutes);
+
+                <div class="d-flex align-items-center gap-2">
+                    <a class="fs-2 fw-semibold text-decoration-none"
+                       asp-controller="Tasks"
+                       asp-action="Details"
+                       asp-route-id="@Model.ActiveTask.Id">
+                        @Model.ActiveTask.Title
+                    </a>
+
+                    @if (!Model.ActiveTask.IsRunning)
+                    {
+                        <span class="badge bg-warning text-dark">Duraklatıldı</span>
+                    }
+                </div>
+
+                <div class="row mt-3 g-3">
+                    <div class="col-sm-4">
+                        <div class="text-muted small">Son Tarih</div>
+                        <div class="fw-semibold">@Model.ActiveTask.DueDate.ToString("dd.MM.yyyy HH:mm")</div>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <div class="text-muted small">Çalışma Süresi</div>
+                        <div class="fw-semibold">@elapsedText</div>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <div class="text-muted small">Kalan Süre</div>
+                        <div class="fw-semibold @(isOverdue ? "text-danger" : "")">
+                            @remainingText
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 mt-auto pt-4">
+                    <form asp-controller="Tasks" asp-action="Complete" asp-route-id="@Model.ActiveTask.Id" method="post" class="flex-fill">
+                        <input type="hidden" name="returnUrl" value="@Url.Action("Index", "Dashboard")" />
+                        <button class="btn btn-lg btn-success w-100">
+                            <i class="bi bi-check-lg"></i> Bitir
+                        </button>
+                    </form>
+
+                    @if (Model.ActiveTask.IsRunning)
+                    {
+                        <form asp-controller="Tasks" asp-action="Pause" asp-route-id="@Model.ActiveTask.Id" method="post" class="flex-fill">
+                            <input type="hidden" name="returnUrl" value="@Url.Action("Index", "Dashboard")" />
+                            <button class="btn btn-lg btn-outline-warning w-100">
+                                <i class="bi bi-pause-fill"></i> Duraklat
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <form asp-controller="Tasks" asp-action="Resume" asp-route-id="@Model.ActiveTask.Id" method="post" class="flex-fill">
+                            <input type="hidden" name="returnUrl" value="@Url.Action("Index", "Dashboard")" />
+                            <button class="btn btn-lg btn-outline-success w-100">
+                                <i class="bi bi-play-fill"></i> Devam Et
+                            </button>
+                        </form>
+                    }
+
+                    <a class="btn btn-lg btn-outline-secondary flex-fill"
+                       asp-controller="Tasks"
+                       asp-action="Edit"
+                       asp-route-id="@Model.ActiveTask.Id">
+                        <i class="bi bi-pencil"></i> Düzenle
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card p-3 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h5 class="mb-0">Son Görevler</h5>
+
+                <a asp-controller="Tasks" asp-action="Index" class="small">
+                    Tümünü gör
+                </a>
+            </div>
+
+            @if (!Model.Recent.Any())
+            {
+                <p class="text-muted small mb-0">
+                    Henüz görev yok.
+                </p>
+            }
+            else
+            {
+                <div class="list-group list-group-flush">
+                    @foreach (var t in Model.Recent)
+                    {
+                        <a class="list-group-item list-group-item-action px-0"
+                           asp-controller="Tasks"
+                           asp-action="Details"
+                           asp-route-id="@t.Id">
+
+                            <div class="d-flex justify-content-between">
+                                <strong class="small">@t.Title</strong>
+                                <span class="small">@t.Status</span>
+                            </div>
+
+                            <small class="text-muted">
+                                Son tarih: @t.DueDate.ToString("dd.MM.yyyy")
+                            </small>
+                        </a>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>

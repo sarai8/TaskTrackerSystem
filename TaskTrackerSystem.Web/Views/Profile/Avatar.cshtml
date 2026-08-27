@@ -1,0 +1,31 @@
+﻿@model List<TaskTrackerSystem.Web.Common.AvatarOption>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card p-4 shadow-sm">
+            <h2 class="mb-4">Avatar Seç</h2>
+
+            <div class="d-flex flex-wrap gap-3">
+                @foreach (var a in Model)
+                {
+                    var isSelected = a.Id == (string)ViewBag.SelectedAvatarId;
+
+                    <form asp-action="Avatar" method="post">
+                        <input type="hidden" name="avatarId" value="@a.Id" />
+
+                        <button type="submit" class="btn p-0 border-0 bg-transparent" title="Bu avatarı seç">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center @(isSelected ? "border border-3 border-dark" : "")"
+                                 style="width:64px;height:64px;background-color:@a.Color;">
+                                <i class="bi @a.Icon text-white fs-4"></i>
+                            </div>
+                        </button>
+                    </form>
+                }
+            </div>
+
+            <a asp-action="Index" class="btn btn-outline-secondary mt-4 align-self-start">
+                Profile Dön
+            </a>
+        </div>
+    </div>
+</div>
