@@ -8,16 +8,20 @@ using TaskTrackerSystem.Application.Validators;
 using TaskTrackerSystem.Infrastructure;
 using TaskTrackerSystem.Infrastructure.Persistence;
 using TaskTrackerSystem.Web.Services;
+using TaskTrackerSystem.Domain.Constants;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<TaskMappingProfile>());
 builder.Services.AddScoped<ITaskService, TaskService>();
+builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+builder.Services.AddScoped<IDepartmentJoinRequestService, DepartmentJoinRequestService>();
 builder.Services.AddScoped<IValidator<CreateTaskDto>, CreateTaskValidator>();
 builder.Services.AddScoped<IValidator<UpdateTaskDto>, UpdateTaskValidator>();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddHostedService<TaskReminderBackgroundService>();
+builder.Services.AddScoped<ITaskAssignmentService, TaskAssignmentService>();
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
@@ -44,9 +48,19 @@ using (var scope = app.Services.CreateScope())
     var userManager = scope.ServiceProvider
         .GetRequiredService<UserManager<ApplicationUser>>();
 
-    if (!await roleManager.RoleExistsAsync("Admin"))
+    if (!await roleManager.RoleExistsAsync(Roles.Admin))
     {
-        await roleManager.CreateAsync(new IdentityRole("Admin"));
+        await roleManager.CreateAsync(new IdentityRole(Roles.Admin));
+    }
+
+    if (!await roleManager.RoleExistsAsync(Roles.DepartmentManager))
+    {
+        await roleManager.CreateAsync(new IdentityRole(Roles.DepartmentManager));
+    }
+
+    if (!await roleManager.RoleExistsAsync(Roles.Director))
+    {
+        await roleManager.CreateAsync(new IdentityRole(Roles.Director));
     }
 
     var adminEmail = builder.Configuration["AdminSettings:Email"];
@@ -56,9 +70,9 @@ using (var scope = app.Services.CreateScope())
         var adminUser = await userManager.FindByEmailAsync(adminEmail);
 
         if (adminUser != null &&
-            !await userManager.IsInRoleAsync(adminUser, "Admin"))
+            !await userManager.IsInRoleAsync(adminUser, Roles.Admin))
         {
-            await userManager.AddToRoleAsync(adminUser, "Admin");
+            await userManager.AddToRoleAsync(adminUser, Roles.Admin);
         }
     }
 }

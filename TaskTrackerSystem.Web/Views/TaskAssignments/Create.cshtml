@@ -1,0 +1,97 @@
+﻿@using Microsoft.AspNetCore.Mvc.Rendering
+@model TaskTrackerSystem.Web.ViewModels.TaskAssignmentCreateViewModel
+
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="card p-4 shadow-sm">
+            <h2 class="mb-4">Görev Ata</h2>
+            @if (ViewBag.LockedDepartmentName != null)
+            {
+                <div class="alert alert-info">
+                    Departman Yöneticisi olarak sadece <strong>@ViewBag.LockedDepartmentName</strong> departmanına atama yapabilirsiniz.
+                </div>
+            }
+
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <form method="post">
+                <div class="mb-3">
+                    <label asp-for="Title" class="form-label"></label>
+                    <input asp-for="Title" class="form-control" />
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Description" class="form-label"></label>
+                    <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Priority" class="form-label"></label>
+                        <select asp-for="Priority" class="form-select"
+                                asp-items="Html.GetEnumSelectList<TaskTrackerSystem.Domain.Enums.TaskPriority>()">
+                        </select>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="DueDate" class="form-label"></label>
+                        <input asp-for="DueDate" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label d-block">Atama Şekli</label>
+
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="AssignMode" id="modeDept" value="department" checked>
+                        <label class="form-check-label" for="modeDept">Departmana Ata (havuz)</label>
+                    </div>
+
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="AssignMode" id="modeUser" value="user">
+                        <label class="form-check-label" for="modeUser">Doğrudan Kişiye Ata</label>
+                    </div>
+                </div>
+
+                <div class="mb-3" id="departmentField">
+                    <label class="form-label">Departman</label>
+                    <select asp-for="DepartmentId" class="form-select"
+                            asp-items="@(new SelectList(ViewBag.Departments, "Id", "Name"))">
+                        <option value="">Departman seçin</option>
+                    </select>
+                </div>
+
+                <div class="mb-3 d-none" id="userField">
+                    <label class="form-label">Kişi</label>
+                    <select asp-for="UserId" class="form-select"
+                            asp-items="@(new SelectList(ViewBag.Users, "Id", "Name"))">
+                        <option value="">Kişi seçin</option>
+                    </select>
+                </div>
+
+                <button class="btn btn-primary">Ata</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    const deptRadio = document.getElementById('modeDept');
+    const userRadio = document.getElementById('modeUser');
+    const deptField = document.getElementById('departmentField');
+    const userField = document.getElementById('userField');
+
+    function updateFields() {
+        if (deptRadio.checked) {
+            deptField.classList.remove('d-none');
+            userField.classList.add('d-none');
+        } else {
+            deptField.classList.add('d-none');
+            userField.classList.remove('d-none');
+        }
+    }
+
+    deptRadio.addEventListener('change', updateFields);
+    userRadio.addEventListener('change', updateFields);
+    updateFields();
+</script>

@@ -5,6 +5,7 @@ namespace TaskTrackerSystem.Application.Interfaces;
 public interface ITaskService
 {
     Task<IReadOnlyList<TaskDto>> GetTasksAsync(string userId);
+    Task<IReadOnlyList<TaskDto>> GetAllTasksAsync();
 
     Task<TaskDto?> GetTaskAsync(int id, string userId);
 

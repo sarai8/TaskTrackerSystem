@@ -1,4 +1,5 @@
 ﻿@model TaskTrackerSystem.Web.ViewModels.AdminUserEditViewModel
+@using Microsoft.AspNetCore.Mvc.Rendering
 
 <div class="row justify-content-center">
     <div class="col-md-6">
@@ -23,6 +24,23 @@
                 <div class="mb-3">
                     <label asp-for="UserName" class="form-label"></label>
                     <input asp-for="UserName" class="form-control" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Departman</label>
+                    <select asp-for="DepartmentId" class="form-select"
+                            asp-items="@(new SelectList(ViewBag.Departments, "Id", "Name"))">
+                        <option value="">Departman yok</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Rol</label>
+                    <select asp-for="Role" class="form-select">
+                        <option value="Employee">Çalışan</option>
+                        <option value="DepartmentManager">Departman Yöneticisi</option>
+                        <option value="Director">Müdür</option>
+                        <option value="Admin">Admin</option>
+                    </select>
                 </div>
 
                 <div class="d-flex gap-2">

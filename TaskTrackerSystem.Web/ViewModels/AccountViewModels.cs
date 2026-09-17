@@ -19,6 +19,9 @@ public class RegisterViewModel
     [Display(Name = "Kullanıcı Adı")]
     public string UserName { get; set; } = "";
 
+    [Display(Name = "Departman")]
+    public int? DepartmentId { get; set; }
+
     [Required]
     [DataType(DataType.Password)]
     [MinLength(6)]

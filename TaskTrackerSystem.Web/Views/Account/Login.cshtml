@@ -1,47 +1,354 @@
 @model LoginViewModel
 
-<div class="card card-md">
-    <div class="card-body">
-        <h2 class="h2 text-center mb-4">Giriş Yap</h2>
+<div class="row g-4 justify-content-center align-items-stretch">
 
-        <div asp-validation-summary="All" class="text-danger mb-3"></div>
+    <!-- SOL TARAF: DEMO BİLGİLERİ -->
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-body">
 
-        <form method="post" autocomplete="off">
-            <div class="mb-3">
-                <label asp-for="Email" class="form-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
+                <h2 class="h2 mb-4">Demo Giriş Bilgileri</h2>
+
+                <!-- Müdür -->
+                <div class="mb-4">
+                    <h4 class="mb-3">Müdür</h4>
+
+                    <div class="mb-2">
+                        <label class="form-label">E-posta</label>
+
+                        <div class="input-group">
+                            <input type="text"
+                                   class="form-control"
+                                   id="directorEmail"
+                                   value="saraibr.173@gmail.com"
+                                   readonly />
+
+                            <button type="button"
+                                    class="btn btn-outline-secondary"
+                                    onclick="copyDemoInfo('directorEmail')">
+                                <i class="bi bi-clipboard"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="form-label">Şifre</label>
+
+                        <div class="input-group">
+                            <input type="text"
+                                   class="form-control"
+                                   id="directorPassword"
+                                   value="sara123"
+                                   readonly />
+
+                            <button type="button"
+                                    class="btn btn-outline-secondary"
+                                    onclick="copyDemoInfo('directorPassword')">
+                                <i class="bi bi-clipboard"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+
+                <hr />
+
+
+                <!-- Departman Yöneticisi -->
+                <div class="mb-4">
+                    <h4 class="mb-3">Departman Yöneticisi</h4>
+
+                    <div class="mb-2">
+                        <label class="form-label">E-posta</label>
+
+                        <div class="input-group">
+                            <input type="text"
+                                   class="form-control"
+                                   id="managerEmail"
+                                   value="it@gmail.com"
+                                   readonly />
+
+                            <button type="button"
+                                    class="btn btn-outline-secondary"
+                                    onclick="copyDemoInfo('managerEmail')">
+                                <i class="bi bi-clipboard"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="form-label">Şifre</label>
+
+                        <div class="input-group">
+                            <input type="text"
+                                   class="form-control"
+                                   id="managerPassword"
+                                   value="info123"
+                                   readonly />
+
+                            <button type="button"
+                                    class="btn btn-outline-secondary"
+                                    onclick="copyDemoInfo('managerPassword')">
+                                <i class="bi bi-clipboard"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+
+                <hr />
+
+
+                <!-- Çalışan -->
+                <div>
+                    <h4 class="mb-3">Çalışan</h4>
+
+                    <div class="mb-2">
+                        <label class="form-label">E-posta</label>
+
+                        <div class="input-group">
+                            <input type="text"
+                                   class="form-control"
+                                   id="employeeEmail"
+                                   value="sara1@gmail.com"
+                                   readonly />
+
+                            <button type="button"
+                                    class="btn btn-outline-secondary"
+                                    onclick="copyDemoInfo('employeeEmail')">
+                                <i class="bi bi-clipboard"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="form-label">Şifre</label>
+
+                        <div class="input-group">
+                            <input type="text"
+                                   class="form-control"
+                                   id="employeePassword"
+                                   value="sara123"
+                                   readonly />
+
+                            <button type="button"
+                                    class="btn btn-outline-secondary"
+                                    onclick="copyDemoInfo('employeePassword')">
+                                <i class="bi bi-clipboard"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <hr />
+
+
+                
+                <!-- admin -->
+                <div class="mb-4">
+                    <h4 class="mb-3">Admin</h4>
+
+                    <div class="mb-2">
+                        <label class="form-label">E-posta</label>
+
+                        <div class="input-group">
+                            <input type="text"
+                                   class="form-control"
+                                   id="adminEmail"
+                                   value="sara.devnotify@gmail.com"
+                                   readonly />
+
+                            <button type="button"
+                                    class="btn btn-outline-secondary"
+                                    onclick="copyDemoInfo('adminEmail')">
+                                <i class="bi bi-clipboard"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="form-label">Şifre</label>
+
+                        <div class="input-group">
+                            <input type="text"
+                                   class="form-control"
+                                   id="adminPassword"
+                                   value="admin123"
+                                   readonly />
+
+                            <button type="button"
+                                    class="btn btn-outline-secondary"
+                                    onclick="copyDemoInfo('adminPassword')">
+                                <i class="bi bi-clipboard"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+
+                <hr />
+
             </div>
-
-            <div class="mb-2">
-                <label asp-for="Password" class="form-label"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-check">
-                    <input asp-for="RememberMe" class="form-check-input" />
-                    <span class="form-check-label">Beni hatırla</span>
-                </label>
-            </div>
-
-            <div class="form-footer">
-                <button class="btn btn-primary w-100">
-                    Giriş Yap
-                </button>
-            </div>
-        </form>
+        </div>
     </div>
 
-    <div class="hr-text">veya</div>
 
-    <div class="card-body text-center">
-        <p class="mb-1">
-            <a asp-action="ForgotPassword">Şifremi unuttum</a>
-        </p>
-        <p class="mb-0">
-            Hesabın yok mu? <a asp-action="Register" class="fw-medium">Kayıt ol</a>
-        </p>
+   
+    <div class="col-md-6">
+        <div class="card h-100">
+
+            <div class="card-body">
+
+                <h2 class="h2 text-center mb-4">Giriş Yap</h2>
+
+                <div asp-validation-summary="All"
+                     class="text-danger mb-3">
+                </div>
+
+                <form method="post" autocomplete="off">
+
+                    <div class="mb-3">
+
+                        <label asp-for="Email"
+                               class="form-label">
+                        </label>
+
+                        <input asp-for="Email"
+                               class="form-control" />
+
+                        <span asp-validation-for="Email"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <div class="mb-2">
+
+                        <label asp-for="Password"
+                               class="form-label">
+                        </label>
+
+                        <div class="input-group">
+
+                            <input asp-for="Password"
+                                   type="password"
+                                   class="form-control"
+                                   id="loginPassword" />
+
+                            <button type="button"
+                                    class="btn btn-outline-secondary"
+                                    id="toggleLoginPassword">
+
+                                <i class="bi bi-eye"
+                                   id="loginPasswordIcon">
+                                </i>
+
+                            </button>
+
+                        </div>
+
+                        <span asp-validation-for="Password"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <label class="form-check">
+
+                            <input asp-for="RememberMe"
+                                   class="form-check-input" />
+
+                            <span class="form-check-label">
+                                Beni hatırla
+                            </span>
+
+                        </label>
+
+                    </div>
+
+
+                    <div class="form-footer">
+
+                        <button type="submit"
+                                class="btn btn-primary w-100">
+                            Giriş Yap
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+
+            <div class="hr-text">
+                veya
+            </div>
+
+
+            <div class="card-body text-center">
+
+                <p class="mb-1">
+                    <a asp-action="ForgotPassword">
+                        Şifremi unuttum
+                    </a>
+                </p>
+
+                <p class="mb-0">
+                    Hesabın yok mu?
+                    <a asp-action="Register"
+                       class="fw-medium">
+                        Kayıt ol
+                    </a>
+                </p>
+
+            </div>
+
+        </div>
     </div>
+
 </div>
+
+
+<script>
+
+    document
+        .getElementById("toggleLoginPassword")
+        .addEventListener("click", function() {
+
+            const passwordInput =
+                document.getElementById("loginPassword");
+
+            const icon =
+                document.getElementById("loginPasswordIcon");
+
+            if (passwordInput.type === "password") {
+
+                passwordInput.type = "text";
+
+                icon.classList.remove("bi-eye");
+                icon.classList.add("bi-eye-slash");
+
+            } else {
+
+                passwordInput.type = "password";
+
+                icon.classList.remove("bi-eye-slash");
+                icon.classList.add("bi-eye");
+            }
+        });
+
+
+    function copyDemoInfo(elementId) {
+
+        const input =
+            document.getElementById(elementId);
+
+        navigator.clipboard.writeText(input.value);
+    }
+
+</script>

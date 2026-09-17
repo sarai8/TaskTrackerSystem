@@ -20,6 +20,8 @@ public class TaskDto
     public DateTime CreatedAt { get; set; }
 
     public bool IsArchived { get; set; }
+
+    public string UserId { get; set; } = string.Empty;
 }
 
 public class CreateTaskDto

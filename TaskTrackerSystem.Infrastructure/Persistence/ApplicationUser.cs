@@ -9,4 +9,6 @@ public class ApplicationUser : IdentityUser
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     public string AvatarId { get; set; } = "avatar-1";
+
+    public int? DepartmentId { get; set; }
 }

@@ -10,6 +10,10 @@ public class ProfileViewModel
 
     public string UserName { get; set; } = "";
 
+    public string DepartmentName { get; set; } = "Departman yok";
+
+    public string Position { get; set; } = "Çalışan";
+
     public DateTime CreatedAt { get; set; }
 
     public string AvatarId { get; set; } = "avatar-1";
@@ -36,6 +40,9 @@ public class ProfileEditViewModel
         ErrorMessage = "Kullanıcı adı yalnızca harf, rakam, nokta ve alt çizgi içerebilir; boşluk veya @ işareti kullanılamaz.")]
     [Display(Name = "Kullanıcı Adı")]
     public string UserName { get; set; } = "";
+
+    [Display(Name = "Departman")]
+    public int? DepartmentId { get; set; }
 }
 
 public class DailyTimeChartItem

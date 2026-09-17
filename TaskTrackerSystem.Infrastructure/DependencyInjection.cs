@@ -17,9 +17,11 @@ public static class DependencyInjection
             options.UseSqlServer(config.GetConnectionString("DefaultConnection")));
 
         services.AddScoped<ITaskRepository, TaskRepository>();
-
-        services.AddScoped<ITaskRepository, TaskRepository>();
         services.AddScoped<ITaskTimeLogRepository, TaskTimeLogRepository>();
+        services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+        services.AddScoped<IDepartmentJoinRequestRepository, DepartmentJoinRequestRepository>();
+        services.AddScoped<ITaskAssignmentRepository, TaskAssignmentRepository>();
+
 
         services.Configure<EmailSettings>(config.GetSection("EmailSettings"));
         services.AddScoped<IEmailSender, SmtpEmailSender>();

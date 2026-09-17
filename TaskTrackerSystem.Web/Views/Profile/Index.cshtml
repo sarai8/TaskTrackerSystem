@@ -20,24 +20,30 @@
                 </a>
             </div>
 
-            <h2 class="mb-4">My Profile</h2>
+            <h2 class="mb-4">Profilim</h2>
 
             <dl class="row mb-0">
-                <dt class="col-sm-4">Name - Surname</dt>
+                <dt class="col-sm-4">Ad Soyad</dt>
                 <dd class="col-sm-8">@Model.Name</dd>
 
-                <dt class="col-sm-4">Email</dt>
+                <dt class="col-sm-4">E-posta</dt>
                 <dd class="col-sm-8">@Model.Email</dd>
 
-                <dt class="col-sm-4">Username</dt>
+                <dt class="col-sm-4">Kullanıcı Adı</dt>
                 <dd class="col-sm-8">@Model.UserName</dd>
 
-                <dt class="col-sm-4">Registration Date</dt>
+                <dt class="col-sm-4">Departman</dt>
+                <dd class="col-sm-8">@Model.DepartmentName</dd>
+
+                <dt class="col-sm-4">Pozisyon</dt>
+                <dd class="col-sm-8">@Model.Position</dd>
+
+                <dt class="col-sm-4">Kayıt Tarihi</dt>
                 <dd class="col-sm-8">@Model.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</dd>
             </dl>
 
             <a asp-action="Edit" class="btn btn-primary mt-3">
-                Update Profile
+                Profili Güncelle
             </a>
         </div>
     </div>

@@ -1,0 +1,124 @@
+﻿@using TaskTrackerSystem.Domain.Constants
+@model TaskTrackerSystem.Web.Controllers.ManagerDashboardVm
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2>
+            @(User.IsInRole(Roles.Director)
+                ? "Müdür Paneli"
+                : "Departman Yöneticisi Paneli")
+        </h2>
+
+        @if (User.IsInRole(Roles.Director))
+        {
+            <form method="get"
+                  asp-controller="ManagerDashboard"
+                  asp-action="Index"
+                  class="mb-3">
+
+                <label class="form-label fw-semibold">
+                    Departman Seç
+                </label>
+
+                <select name="departmentId"
+                        class="form-select"
+                        onchange="this.form.submit()">
+
+                    <option value="">Departman seçiniz...</option>
+
+                    @foreach (var department in ViewBag.Departments)
+                    {
+                        <option value="@department.Id"
+                                selected="@(ViewBag.SelectedDepartmentId == department.Id)">
+                            @department.Name
+                        </option>
+                    }
+                </select>
+            </form>
+        }
+        <p class="text-muted mb-0">@(Model.DepartmentName ?? "Departmanınız")</p>
+    </div>
+    <a class="btn btn-primary" asp-controller="TaskAssignments" asp-action="Create">+ Görev Ata</a>
+</div>
+
+@if (Model.DepartmentName == null)
+{
+    <div class="alert alert-warning">Herhangi bir departmana atanmış değilsiniz, bu yüzden departman istatistikleri gösterilemiyor.</div>
+}
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3"><div class="card p-3"><div class="text-muted">Çalışan</div><div class="stat">@Model.EmployeeCount</div></div></div>
+    <div class="col-md-3"><div class="card p-3"><div class="text-muted">Toplam Görev</div><div class="stat">@Model.TotalTasks</div></div></div>
+    <div class="col-md-3"><div class="card p-3"><div class="text-muted">Devam Ediyor</div><div class="stat">@Model.InProgress</div></div></div>
+    <div class="col-md-3"><div class="card p-3"><div class="text-muted">Atanmamış</div><div class="stat">@Model.UnassignedCount</div></div></div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-6">
+        <div class="card p-3 h-100">
+            <h5 class="mb-3">Görev Durumları</h5>
+            <div style="height:300px;"><canvas id="taskStatusChart"></canvas></div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card p-3 h-100">
+            <h5 class="mb-3">Çalışan İş Yükü</h5>
+            @if (!Model.Workload.Any())
+            {
+                <p class="text-muted small mb-0">Departmanda henüz çalışan yok.</p>
+            }
+            else
+            {
+                <div class="list-group list-group-flush">
+                    @foreach (var w in Model.Workload)
+                    {
+                        <div class="list-group-item d-flex justify-content-between px-0">
+                            <span>@w.EmployeeName</span>
+                            <span class="text-muted">@w.TaskCount görev</span>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="card p-3">
+    <h5 class="mb-3">Atanmamış Görevler</h5>
+    @if (!Model.UnassignedPosts.Any())
+    {
+        <p class="text-muted small mb-0">Havuzda bekleyen görev yok.</p>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-vcenter">
+                <thead><tr><th>Görev</th><th>Son Tarih</th><th></th></tr></thead>
+                <tbody>
+                    @foreach (var p in Model.UnassignedPosts)
+                    {
+                        <tr>
+                            <td>@p.Title</td>
+                            <td>@p.DueDate.ToString("dd.MM.yyyy")</td>
+                            <td class="text-end">
+                                <a class="btn btn-sm btn-outline-primary" asp-controller="TaskAssignments" asp-action="Create">Görevi Ata</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script>
+    new Chart(document.getElementById('taskStatusChart'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Bekleyen', 'Devam Ediyor', 'Tamamlanan'],
+            datasets: [{ data: [@Model.Pending, @Model.InProgress, @Model.Completed], backgroundColor: ['#f59f00', '#4263eb', '#2fb344'] }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+</script>

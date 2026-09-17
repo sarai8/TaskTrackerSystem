@@ -6,6 +6,8 @@ public interface ITaskRepository
 {
     Task<List<TaskItem>> GetByUserAsync(string userId);
 
+    Task<List<TaskItem>> GetAllAsync();
+
     Task<TaskItem?> GetByIdAsync(int id, string userId);
 
     Task<TaskItem?> GetInProgressTaskAsync(string userId);

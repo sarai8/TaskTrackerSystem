@@ -1,0 +1,117 @@
+﻿@model TaskTrackerSystem.Web.ViewModels.DepartmentDetailsViewModel
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>@Model.DepartmentName</h1>
+
+    <a class="btn btn-outline-secondary" asp-action="Index">
+        <i class="bi bi-arrow-left"></i> Departmanlara Dön
+    </a>
+</div>
+
+<div class="row g-3">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title mb-0">Yöneticiler</h3>
+            </div>
+
+            <div class="list-group list-group-flush">
+                @if (!Model.Managers.Any())
+                {
+                    <div class="list-group-item text-muted small">Yönetici yok.</div>
+                }
+                else
+                {
+                    @foreach (var m in Model.Managers)
+                    {
+                        <div class="list-group-item">
+                            <div class="fw-semibold">@m.Name</div>
+                            <div class="small text-muted">@m.Email</div>
+                            <div class="small text-muted">@m.Position</div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title mb-0">Çalışanlar</h3>
+            </div>
+
+            <div class="list-group list-group-flush">
+                @if (!Model.Employees.Any())
+                {
+                    <div class="list-group-item text-muted small">Çalışan yok.</div>
+                }
+                else
+                {
+                    @foreach (var e in Model.Employees)
+                    {
+                        <a asp-action="EditMember"
+                           asp-route-id="@e.Id"
+                           asp-route-departmentId="@ViewContext.RouteData.Values["id"]"
+                           class="list-group-item list-group-item-action">
+
+                            <div class="fw-semibold">@e.Name</div>
+                            <div class="small text-muted">@e.Email</div>
+                            <div class="small text-muted">@e.Position</div>
+
+                        </a>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-3">
+        <div class="card-header">
+            <h3 class="card-title mb-0">Departmansız Kullanıcılar</h3>
+        </div>
+
+        <div class="list-group list-group-flush">
+            @if (!Model.UnassignedUsers.Any())
+            {
+                <div class="list-group-item text-muted small">
+                    Departmana bağlı olmayan kullanıcı yok.
+                </div>
+            }
+            else
+            {
+                @foreach (var u in Model.UnassignedUsers)
+                {
+                    if (u.Position == "Çalışan")
+                    {
+                        <a asp-action="EditMember"
+                           asp-route-id="@u.Id"
+                           asp-route-departmentId="@ViewContext.RouteData.Values["id"]"
+                           class="list-group-item list-group-item-action">
+
+                            <div class="fw-semibold">@u.Name</div>
+                            <div class="small text-muted">
+                                @u.Email
+                            </div>
+                            <div class="small text-muted">
+                                @u.Position
+                            </div>
+                        </a>
+                    }
+                    else
+                    {
+                        <div class="list-group-item">
+                            <div class="fw-semibold">@u.Name</div>
+                            <div class="small text-muted">
+                                @u.Email
+                            </div>
+                            <div class="small text-muted">
+                                @u.Position
+                            </div>
+                        </div>
+                    }
+                }
+            }
+        </div>
+    </div>
+</div>

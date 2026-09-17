@@ -1,3 +1,4 @@
+@using TaskTrackerSystem.Domain.Constants
 <!doctype html>
 <html lang="tr" data-bs-theme="light">
 <head>
@@ -14,165 +15,479 @@
 </head>
 
 <body>
+
     @if (User.Identity?.IsAuthenticated == true)
     {
         <div class="page">
-            <aside class="navbar navbar-vertical navbar-expand-lg app-sidebar" data-bs-theme="dark">
+
+            <aside class="navbar navbar-vertical navbar-expand-lg app-sidebar"
+                   data-bs-theme="dark">
+
                 <div class="container-fluid">
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar-menu">
+
+                    <button class="navbar-toggler"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#sidebar-menu">
+
                         <span class="navbar-toggler-icon"></span>
+
                     </button>
 
+
                     <h1 class="navbar-brand navbar-brand-autodark sidebar-brand">
-                        <a asp-controller="Dashboard" asp-action="Index" class="text-decoration-none">
+
+                        <a asp-controller="Dashboard"
+                           asp-action="Index"
+                           class="text-decoration-none">
+
                             TaskTracker
+
                         </a>
+
                     </h1>
 
-                    <div class="navbar-collapse collapse" id="sidebar-menu">
+
+                    <div class="navbar-collapse collapse"
+                         id="sidebar-menu">
+
                         <ul class="navbar-nav pt-lg-5">
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="Dashboard" asp-action="Index">
-                                    <span class="nav-link-icon"><i class="bi bi-house"></i></span>
-                                    <span class="nav-link-title">Anasayfa</span>
-                                </a>
-                            </li>
+
+
 
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="Tasks" asp-action="Index">
-                                    <span class="nav-link-icon"><i class="bi bi-list-check"></i></span>
-                                    <span class="nav-link-title">Görevler</span>
+
+                                <a class="nav-link"
+                                   asp-controller="Dashboard"
+                                   asp-action="Index">
+
+                                    <span class="nav-link-icon">
+                                        <i class="bi bi-house"></i>
+                                    </span>
+
+                                    <span class="nav-link-title">
+                                        Anasayfa
+                                    </span>
+
                                 </a>
+
                             </li>
+
 
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="Tasks" asp-action="Calendar">
-                                    <span class="nav-link-icon"><i class="bi bi-calendar3"></i></span>
-                                    <span class="nav-link-title">Takvim</span>
+
+                                <a class="nav-link"
+                                   asp-controller="Tasks"
+                                   asp-action="Index">
+
+                                    <span class="nav-link-icon">
+                                        <i class="bi bi-list-check"></i>
+                                    </span>
+
+                                    <span class="nav-link-title">
+                                        Görevler
+                                    </span>
+
                                 </a>
+
                             </li>
+
 
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="Profile" asp-action="Index">
-                                    <span class="nav-link-icon"><i class="bi bi-person"></i></span>
-                                    <span class="nav-link-title">Profil</span>
+
+                                <a class="nav-link"
+                                   asp-controller="Tasks"
+                                   asp-action="Calendar">
+
+                                    <span class="nav-link-icon">
+                                        <i class="bi bi-calendar3"></i>
+                                    </span>
+
+                                    <span class="nav-link-title">
+                                        Takvim
+                                    </span>
+
                                 </a>
+
                             </li>
 
+
+                            @if (User.IsInRole("DepartmentManager") ||
+                                                             User.IsInRole("Director"))
+                            {
+
+                                <li class="nav-item">
+
+                                    <a class="nav-link"
+                                       asp-controller="Departments"
+                                       asp-action="Index">
+
+                                        <span class="nav-link-icon">
+                                            <i class="bi bi-diagram-3"></i>
+                                        </span>
+
+                                        <span class="nav-link-title">
+                                            Departmanlar
+                                        </span>
+
+                                    </a>
+
+                                </li>
+
+
+                                <li class="nav-item">
+
+                                    <a class="nav-link"
+                                       asp-controller="DepartmentRequests"
+                                       asp-action="Index">
+
+                                        <span class="nav-link-icon">
+                                            <i class="bi bi-person-check"></i>
+                                        </span>
+
+                                        <span class="nav-link-title">
+                                            Departman İstekleri
+                                        </span>
+
+                                    </a>
+
+                                </li>
+
+
+                                <li class="nav-item">
+
+                                    <a class="nav-link"
+                                       asp-controller="TaskAssignments"
+                                       asp-action="Create">
+
+                                        <span class="nav-link-icon">
+                                            <i class="bi bi-send-plus"></i>
+                                        </span>
+
+                                        <span class="nav-link-title">
+                                            Görev Ata
+                                        </span>
+
+                                    </a>
+
+                                </li>
+
+
+                                <li class="nav-item">
+
+                                    @if (User.IsInRole(Roles.DepartmentManager))
+                                    {
+                                        <a asp-controller="TaskApprovals"
+                                           asp-action="Index"
+                                           class="nav-link">
+                                            <i class="bi bi-check2-square me-2"></i>
+                                            Onay Bekleyenler
+                                        </a>
+                                    }
+                                </li>
+
+                            }
+
+
+
+                            @if (!User.IsInRole("Admin"))
+                            {
+
+                                <li class="nav-item">
+
+                                    @if (User.IsInRole(Roles.DepartmentManager) || User.IsInRole(Roles.Employee))
+                                    {
+                                        <a asp-controller="TaskPool"
+                                           asp-action="Index"
+                                           class="nav-link">
+                                            <i class="bi bi-inbox me-2"></i>
+                                            Departman Havuzu
+                                        </a>
+                                    }
+
+                                </li>
+
+                            }
+
+
+                            <!-- ADMIN -->
                             @if (User.IsInRole("Admin"))
                             {
+
                                 <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Admin" asp-action="Index">
-                                        <span class="nav-link-icon"><i class="bi bi-shield-lock"></i></span>
-                                        <span class="nav-link-title">Admin Paneli</span>
+
+                                    <a class="nav-link"
+                                       asp-controller="Admin"
+                                       asp-action="Index">
+
+                                        <span class="nav-link-icon">
+                                            <i class="bi bi-shield-lock"></i>
+                                        </span>
+
+                                        <span class="nav-link-title">
+                                            Kullanıcıları Yönet
+                                        </span>
+
                                     </a>
+
                                 </li>
+
                             }
+
+
+                            <li class="nav-item">
+
+                                <a class="nav-link"
+                                   asp-controller="Profile"
+                                   asp-action="Index">
+
+                                    <span class="nav-link-icon">
+                                        <i class="bi bi-person"></i>
+                                    </span>
+
+                                    <span class="nav-link-title">
+                                        Profil
+                                    </span>
+
+                                </a>
+
+                            </li>
+
+
                         </ul>
+
                     </div>
+
                 </div>
+
             </aside>
 
+
             <div class="page-wrapper">
+
+
                 <header class="navbar navbar-expand-md d-print-none border-bottom">
+
                     <div class="container-fluid">
+
                         <div class="ms-auto d-flex align-items-center gap-2">
-                            <button id="themeToggleBtn" type="button" class="btn btn-icon" title="Açık/Koyu Mod">
-                                <i class="bi bi-moon-stars-fill" id="themeToggleIcon"></i>
+
+
+                            <button id="themeToggleBtn"
+                                    type="button"
+                                    class="btn btn-icon"
+                                    title="Açık/Koyu Mod">
+
+                                <i class="bi bi-moon-stars-fill"
+                                   id="themeToggleIcon"></i>
+
                             </button>
+
 
                             <a class="btn btn-ghost-secondary d-flex align-items-center gap-2"
                                asp-controller="Profile"
                                asp-action="Index">
+
                                 @await Component.InvokeAsync("CurrentUserAvatar")
+
                                 <span>Profil</span>
+
                             </a>
 
-                            <form asp-controller="Account" asp-action="Logout" method="post" class="mb-0">
+
+                            <form asp-controller="Account"
+                                  asp-action="Logout"
+                                  method="post"
+                                  class="mb-0">
+
                                 <button class="btn btn-outline-danger btn-sm">
+
                                     Çıkış
+
                                 </button>
+
                             </form>
+
+
                         </div>
+
                     </div>
+
                 </header>
 
+
                 <div class="page-body">
+
                     <div class="container-xl">
+
+
                         @if (TempData["Success"] != null)
                         {
-                            <div class="alert alert-success">@TempData["Success"]</div>
+
+                            <div class="alert alert-success">
+
+                                @TempData["Success"]
+
+                            </div>
+
                         }
+
 
                         @if (TempData["Error"] != null)
                         {
-                            <div class="alert alert-danger">@TempData["Error"]</div>
+
+                            <div class="alert alert-danger">
+
+                                @TempData["Error"]
+
+                            </div>
+
                         }
 
+
                         @RenderBody()
+
+
                     </div>
+
                 </div>
+
             </div>
+
         </div>
+
     }
+
     else if (ViewData["Layout"] as string == "landing")
     {
+
         @RenderBody()
+
     }
+
     else
     {
+
         <div class="page page-center">
-            <div class="container container-tight py-4">
+
+            <div class="container py-4" style="max-width: 960px;">
+
+
                 <div class="text-center mb-4">
-                    <a asp-controller="Home" asp-action="Index" class="h1 text-decoration-none">
+
+                    <a asp-controller="Home"
+                       asp-action="Index"
+                       class="h1 text-decoration-none">
+
                         TaskTracker
+
                     </a>
+
                 </div>
+
 
                 @if (TempData["Success"] != null)
                 {
-                    <div class="alert alert-success">@TempData["Success"]</div>
+
+                    <div class="alert alert-success">
+
+                        @TempData["Success"]
+
+                    </div>
+
                 }
+
 
                 @if (TempData["Error"] != null)
                 {
-                    <div class="alert alert-danger">@TempData["Error"]</div>
+
+                    <div class="alert alert-danger">
+
+                        @TempData["Error"]
+
+                    </div>
+
                 }
 
+
                 @RenderBody()
+
+
             </div>
+
         </div>
+
     }
+
 
     <script src="https://cdn.jsdelivr.net/npm/@@tabler/core@@1.4.0/dist/js/tabler.min.js"></script>
 
+
     <script>
+
             (function() {
+
                 const root = document.documentElement;
+
                 const icon = document.getElementById('themeToggleIcon');
+
                 const btn = document.getElementById('themeToggleBtn');
 
+
                 function applyTheme(theme) {
+
                     root.setAttribute('data-bs-theme', theme);
+
+
                     if (icon) {
-                        icon.className = theme === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill';
+
+                        icon.className =
+                            theme === 'dark'
+                                ? 'bi bi-sun-fill'
+                                : 'bi bi-moon-stars-fill';
+
                     }
+
                 }
 
-                const saved = localStorage.getItem('theme') || 'light';
+
+                const saved =
+                    localStorage.getItem('theme') || 'light';
+
+
                 applyTheme(saved);
 
+
                 if (btn) {
+
                     btn.addEventListener('click', function() {
-                        const current = root.getAttribute('data-bs-theme');
-                        const next = current === 'dark' ? 'light' : 'dark';
+
+                        const current =
+                            root.getAttribute('data-bs-theme');
+
+
+                        const next =
+                            current === 'dark'
+                                ? 'light'
+                                : 'dark';
+
+
                         localStorage.setItem('theme', next);
+
+
                         applyTheme(next);
+
                     });
+
                 }
+
             })();
+
     </script>
 
+
     @RenderSection("Scripts", required: false)
+
 </body>
+
 </html>

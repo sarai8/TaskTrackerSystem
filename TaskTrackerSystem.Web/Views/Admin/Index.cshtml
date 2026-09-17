@@ -8,9 +8,22 @@
         </p>
     </div>
 
-    <span class="badge bg-dark fs-6">
-        Toplam: @Model.Count kullanıcı
-    </span>
+    <div class="d-flex align-items-center gap-2">
+
+        <span class="badge bg-dark fs-6">
+            Toplam: @Model.Count kullanıcı
+        </span>
+
+        <a asp-action="Create"
+           class="btn btn-primary">
+
+            <i class="bi bi-person-plus"></i>
+
+            Yeni Kullanıcı
+
+        </a>
+
+    </div>
 </div>
 
 <div class="card shadow-sm">
@@ -25,6 +38,8 @@
                         <th>Ad Soyad</th>
                         <th>E-posta</th>
                         <th>Kullanıcı Adı</th>
+                        <th>Departman</th>
+                        <th>Pozisyon</th>
                         <th>Kayıt Tarihi</th>
                         <th>Durum</th>
                         <th>İşlemler</th>
@@ -52,6 +67,8 @@
                                 <td>
                                     @user.UserName
                                 </td>
+                                <td>@user.DepartmentName</td>
+                                <td>@user.Position</td>
 
                                 <td>
                                     @user.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")
@@ -75,11 +92,16 @@
                                             <i class="bi bi-eye"></i>
                                         </a>
 
+
                                         <a asp-action="Edit" asp-route-id="@user.Id"
                                            class="btn btn-sm btn-outline-primary" title="Düzenle">
                                             <i class="bi bi-pencil"></i>
                                         </a>
 
+                                        <a asp-action="ChangePassword" asp-route-id="@user.Id"
+                                           class="btn btn-sm btn-outline-info" title="Şifre Değiştir">
+                                            <i class="bi bi-key"></i>
+                                        </a>
                                         <form asp-action="ToggleStatus" asp-route-id="@user.Id" method="post" class="d-inline">
                                             <button type="submit"
                                                     class="btn btn-sm @(user.IsActive ? "btn-outline-warning" : "btn-outline-success")"

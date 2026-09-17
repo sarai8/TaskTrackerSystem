@@ -1,0 +1,53 @@
+﻿@model List<TaskTrackerSystem.Application.DTOs.DepartmentDto>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Departmanlar</h1>
+</div>
+
+<div class="row g-3">
+    <div class="col-md-4">
+        <div class="card p-3">
+            <h5 class="mb-3">Yeni Departman</h5>
+
+            <form asp-action="Create" method="post" class="d-flex gap-2">
+                <input type="text" name="name" class="form-control" placeholder="Departman adı" required />
+                <button class="btn btn-primary">Ekle</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card">
+            <div class="list-group list-group-flush">
+                @if (!Model.Any())
+                {
+                    <div class="list-group-item text-muted small">Henüz departman yok.</div>
+                }
+                else
+                {
+                    @foreach (var d in Model)
+                    {
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="fw-semibold">@d.Name</div>
+                                <a asp-action="Details" asp-route-id="@d.Id" class="small text-muted text-decoration-none">
+                                    @d.EmployeeCount kişi →
+                                </a>
+                            </div>
+
+                            @if (User.IsInRole("Director") || User.IsInRole("Admin"))
+                            {
+                                <form asp-action="Delete" asp-route-id="@d.Id" method="post">
+                                    <button class="btn btn-sm btn-outline-danger"
+                                            onclick="return confirm('Bu departman silinsin mi? İçindeki kullanıcılar departmansız kalır.')">
+                                        Sil
+                                    </button>
+                                </form>
+                            }
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>

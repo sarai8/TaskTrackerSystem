@@ -1,4 +1,5 @@
 @model RegisterViewModel
+@using Microsoft.AspNetCore.Mvc.Rendering
 
 <div class="card card-md">
     <div class="card-body">
@@ -7,6 +8,7 @@
         <div asp-validation-summary="All" class="text-danger mb-3"></div>
 
         <form method="post" autocomplete="off">
+
             <div class="mb-3">
                 <label asp-for="Name" class="form-label"></label>
                 <input asp-for="Name" class="form-control" />
@@ -23,26 +25,128 @@
             </div>
 
             <div class="mb-3">
-                <label asp-for="Password" class="form-label"></label>
-                <input asp-for="Password" class="form-control" />
+                <label asp-for="DepartmentId" class="form-label"></label>
+                <select asp-for="DepartmentId" class="form-select"
+                        asp-items="@(new SelectList(ViewBag.Departments, "Id", "Name"))">
+                    <option value="">Departman seçin (opsiyonel)</option>
+                </select>
             </div>
 
+            <!-- şifre -->
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label"></label>
+
+                <div class="input-group">
+                    <input asp-for="Password"
+                           type="password"
+                           class="form-control"
+                           id="registerPassword" />
+
+                    <button type="button"
+                            class="btn btn-outline-secondary"
+                            id="toggleRegisterPassword"
+                            aria-label="Şifreyi göster">
+
+                        <i class="bi bi-eye" id="registerPasswordIcon"></i>
+
+                    </button>
+                </div>
+
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <!-- şifre göster gizle -->
+            <script>
+                            document.getElementById("toggleRegisterPassword").addEventListener("click", function() {
+
+                                const passwordInput = document.getElementById("registerPassword");
+                                const icon = document.getElementById("registerPasswordIcon");
+
+                                if (passwordInput.type === "password") {
+
+                                    passwordInput.type = "text";
+
+                                    icon.classList.remove("bi-eye");
+                                    icon.classList.add("bi-eye-slash");
+
+                                    this.setAttribute("aria-label", "Şifreyi gizle");
+
+                                } else {
+
+                                    passwordInput.type = "password";
+
+                                    icon.classList.remove("bi-eye-slash");
+                                    icon.classList.add("bi-eye");
+
+                                    this.setAttribute("aria-label", "Şifreyi göster");
+                                }
+                            });
+            </script>
+
+            <!-- şifre tekrar -->
             <div class="mb-3">
                 <label asp-for="ConfirmPassword" class="form-label"></label>
-                <input asp-for="ConfirmPassword" class="form-control" />
+
+                <div class="input-group">
+                    <input asp-for="ConfirmPassword"
+                           type="password"
+                           class="form-control"
+                           id="confirmPassword" />
+
+                    <button type="button"
+                            class="btn btn-outline-secondary"
+                            id="toggleConfirmPassword"
+                            aria-label="Şifreyi göster">
+
+                        <i class="bi bi-eye" id="confirmPasswordIcon"></i>
+
+                    </button>
+                </div>
+
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
+
+            <!-- şifre tekrar göster gizle -->
+            <script>
+                            document.getElementById("toggleConfirmPassword").addEventListener("click", function() {
+
+                                const passwordInput = document.getElementById("confirmPassword");
+                                const icon = document.getElementById("confirmPasswordIcon");
+
+                                if (passwordInput.type === "password") {
+
+                                    passwordInput.type = "text";
+
+                                    icon.classList.remove("bi-eye");
+                                    icon.classList.add("bi-eye-slash");
+
+                                    this.setAttribute("aria-label", "Şifreyi gizle");
+
+                                } else {
+
+                                    passwordInput.type = "password";
+
+                                    icon.classList.remove("bi-eye-slash");
+                                    icon.classList.add("bi-eye");
+
+                                    this.setAttribute("aria-label", "Şifreyi göster");
+                                }
+                            });
+            </script>
 
             <div class="form-footer">
                 <button class="btn btn-primary w-100">
                     Kayıt Ol
                 </button>
             </div>
+
         </form>
     </div>
 
     <div class="card-body text-center pt-0">
         <p class="mb-0">
-            Zaten hesabın var mı? <a asp-action="Login" class="fw-medium">Giriş yap</a>
+            Zaten hesabın var mı?
+            <a asp-action="Login" class="fw-medium">Giriş yap</a>
         </p>
     </div>
 </div>

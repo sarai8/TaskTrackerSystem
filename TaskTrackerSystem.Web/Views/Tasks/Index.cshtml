@@ -1,15 +1,22 @@
 @model TaskTrackerSystem.Web.ViewModels.TasksIndexViewModel
 
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>Görevlerim</h1>
+    <div>
+        <h2 class="mb-1">Görevlerim</h2>
+        <p class="text-muted mb-0">
+            Görevlerini görüntüle, takip et ve yönet.
+        </p>
+    </div>
 
     <div class="d-flex gap-2">
         <a class="btn btn-outline-secondary" asp-action="Archived">
-            <i class="bi bi-archive"></i> Arşiv
+            <i class="bi bi-archive me-1"></i>
+            Arşiv
         </a>
 
         <a class="btn btn-primary" asp-action="Create">
-            <i class="bi bi-plus-lg"></i> Yeni Görev
+            <i class="bi bi-plus-lg me-1"></i>
+            Yeni Görev
         </a>
     </div>
 </div>

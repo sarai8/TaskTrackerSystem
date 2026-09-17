@@ -1,0 +1,38 @@
+﻿@model List<TaskTrackerSystem.Application.DTOs.TaskAssignmentPostDto>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Departman Havuzu</h1>
+</div>
+
+<div class="card">
+    <div class="list-group list-group-flush">
+        @if (!Model.Any())
+        {
+            <div class="list-group-item text-muted small">
+                Departmanınızda üstlenilmeyi bekleyen görev yok.
+            </div>
+        }
+        else
+        {
+            @foreach (var p in Model)
+            {
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="fw-semibold">@p.Title</div>
+                        <div class="small text-muted mb-1">@p.Description</div>
+                        <div class="small text-muted">
+                            Son tarih: @p.DueDate.ToString("dd.MM.yyyy HH:mm")
+                        </div>
+                        <span class="badge @(p.Priority == TaskTrackerSystem.Domain.Enums.TaskPriority.High ? "badge-high" : p.Priority == TaskTrackerSystem.Domain.Enums.TaskPriority.Medium ? "badge-medium" : "badge-low")">
+                            @p.Priority
+                        </span>
+                    </div>
+
+                    <form asp-action="Claim" asp-route-id="@p.Id" method="post">
+                        <button class="btn btn-primary btn-sm">Ben Alayım</button>
+                    </form>
+                </div>
+            }
+        }
+    </div>
+</div>

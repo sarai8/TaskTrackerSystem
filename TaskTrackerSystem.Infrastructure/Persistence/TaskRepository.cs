@@ -19,6 +19,11 @@ public class TaskRepository : ITaskRepository
             .ThenBy(x => x.DueDate)
             .ToListAsync();
 
+    public Task<List<TaskItem>> GetAllAsync()
+    => _db.Tasks
+        .AsNoTracking()
+        .ToListAsync();
+
     public Task<TaskItem?> GetByIdAsync(int id, string userId)
         => _db.Tasks
             .FirstOrDefaultAsync(x =>

@@ -23,6 +23,10 @@ public class TaskService : ITaskService
         _mapper = mapper;
     }
 
+    public async Task<IReadOnlyList<TaskDto>> GetAllTasksAsync()
+    => _mapper.Map<List<TaskDto>>(
+        await _repo.GetAllAsync());
+
     public async Task<IReadOnlyList<TaskDto>> GetTasksAsync(string userId)
         => _mapper.Map<List<TaskDto>>(
             await _repo.GetByUserAsync(userId));

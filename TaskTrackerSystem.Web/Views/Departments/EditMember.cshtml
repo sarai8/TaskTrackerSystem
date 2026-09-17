@@ -1,0 +1,94 @@
+﻿@model TaskTrackerSystem.Web.ViewModels.EditDepartmentMemberViewModel
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Çalışan Departmanını Düzenle</h1>
+
+    <a asp-action="Details"
+       asp-route-id="@Model.ReturnDepartmentId"
+       class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Geri Dön
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+
+        <div class="mb-3">
+            <label class="form-label">Ad Soyad</label>
+            <input class="form-control"
+                   value="@Model.Name"
+                   readonly />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">E-posta</label>
+            <input class="form-control"
+                   value="@Model.Email"
+                   readonly />
+        </div>
+
+        <form asp-action="EditMember" method="post">
+
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="ReturnDepartmentId" />
+
+            <div class="mb-3">
+                <label asp-for="DepartmentId" class="form-label">
+                    Departman
+                </label>
+
+                <select asp-for="DepartmentId"
+                        class="form-select"
+                        asp-items="@(new SelectList(
+                                                Model.Departments,
+                                                "Id",
+                                                "Name",
+                                                Model.DepartmentId))">
+
+                    <option value="">Departmansız</option>
+
+                </select>
+            </div>
+
+            <div class="d-flex gap-2">
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check-lg"></i>
+                    Departmanı Güncelle
+                </button>
+
+            </div>
+
+        </form>
+
+        <hr />
+
+        <form asp-action="RemoveFromDepartment"
+              method="post">
+
+            @Html.AntiForgeryToken()
+
+            <input type="hidden"
+                   name="id"
+                   value="@Model.Id" />
+
+            <input type="hidden"
+                   name="departmentId"
+                   value="@Model.ReturnDepartmentId" />
+
+            <button type="submit"
+                    class="btn btn-outline-danger"
+                    onclick="return confirm('Bu çalışan departmandan çıkarılsın mı?');">
+
+                <i class="bi bi-person-dash"></i>
+                Departmandan Çıkar
+
+            </button>
+
+        </form>
+
+    </div>
+</div>

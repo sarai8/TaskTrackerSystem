@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using TaskTrackerSystem.Application.Interfaces;
 using TaskTrackerSystem.Infrastructure.Persistence;
 using TaskTrackerSystem.Web.ViewModels;
+using TaskTrackerSystem.Domain.Constants;
 
 namespace TaskTrackerSystem.Web.Controllers;
 
@@ -11,25 +12,40 @@ public class AccountController : Controller
     private readonly UserManager<ApplicationUser> _users;
     private readonly SignInManager<ApplicationUser> _signIn;
     private readonly IEmailSender _emailSender;
+    private readonly IDepartmentService _departmentService;
+    private readonly IDepartmentJoinRequestService _joinRequestService;
+
 
     public AccountController(
         UserManager<ApplicationUser> users,
         SignInManager<ApplicationUser> signIn,
-        IEmailSender emailSender)
+        IEmailSender emailSender,
+        IDepartmentService departmentService,
+         IDepartmentJoinRequestService joinRequestService)
     {
         _users = users;
         _signIn = signIn;
         _emailSender = emailSender;
+        _departmentService = departmentService;
+        _joinRequestService = joinRequestService;
     }
 
+
     [HttpGet]
-    public IActionResult Register() => View();
+    public async Task<IActionResult> Register()
+    {
+        ViewBag.Departments = await _departmentService.GetAllAsync();
+        return View();
+    }
 
     [HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> Register(RegisterViewModel m)
     {
         if (!ModelState.IsValid)
+        {
+            ViewBag.Departments = await _departmentService.GetAllAsync();
             return View(m);
+        }
 
         var u = new ApplicationUser
         {
@@ -43,12 +59,20 @@ public class AccountController : Controller
 
         if (r.Succeeded)
         {
+            if (m.DepartmentId.HasValue)
+            {
+                await _joinRequestService.RequestJoinAsync(u.Id, m.DepartmentId.Value);
+                await NotifyApproversAsync(m.DepartmentId.Value, u);
+            }
+
             await _signIn.SignInAsync(u, false);
             return RedirectToAction("Index", "Dashboard");
         }
 
         foreach (var e in r.Errors)
             ModelState.AddModelError("", e.Description);
+
+        ViewBag.Departments = await _departmentService.GetAllAsync();
 
         return View(m);
     }
@@ -184,5 +208,28 @@ public class AccountController : Controller
             ModelState.AddModelError("", error.Description);
 
         return View(m);
+    }
+
+    private async Task NotifyApproversAsync(int departmentId, ApplicationUser requester)
+    {
+        var department = await _departmentService.GetByIdAsync(departmentId);
+        var departmentName = department?.Name ?? "Departman";
+
+        var directors = await _users.GetUsersInRoleAsync(Roles.Director);
+        var deptManagers = await _users.GetUsersInRoleAsync(Roles.DepartmentManager);
+
+        var approvers = directors
+            .Concat(deptManagers.Where(m => m.DepartmentId == departmentId))
+            .GroupBy(u => u.Id)
+            .Select(g => g.First());
+
+        var subject = $"Departman katılım onayı bekleniyor: {departmentName}";
+        var body = $"<p>{requester.Name} ({requester.Email}), <strong>{departmentName}</strong> departmanına katılmak için istek gönderdi.</p><p>Onaylamak/reddetmek için \"Departman İstekleri\" sayfasını ziyaret edin.</p>";
+
+        foreach (var approver in approvers)
+        {
+            if (!string.IsNullOrWhiteSpace(approver.Email))
+                await _emailSender.SendAsync(approver.Email, subject, body);
+        }
     }
 }
